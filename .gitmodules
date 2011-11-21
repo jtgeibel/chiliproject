@@ -1,0 +1,12 @@
+[submodule "vendor/plugins/chiliproject_web_analytics"]
+	path = vendor/plugins/chiliproject_web_analytics
+	url = git://github.com/deurk/chiliproject_web_analytics.git
+[submodule "vendor/plugins/open_flash_chart"]
+	path = vendor/plugins/open_flash_chart
+	url = git://github.com/pullmonkey/open_flash_chart.git
+[submodule "vendor/plugins/redmine_charts"]
+	path = vendor/plugins/redmine_charts
+	url = git://github.com/mszczytowski/redmine_charts.git
+[submodule "vendor/plugins/stuff_to_do_plugin"]
+	path = vendor/plugins/stuff_to_do_plugin
+	url = git://github.com/edavis10/redmine-stuff-to-do-plugin.git
