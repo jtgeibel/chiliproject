@@ -14,7 +14,7 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class MessageTest < ActiveSupport::TestCase
-  fixtures :projects, :roles, :members, :member_roles, :boards, :messages, :users, :watchers
+  fixtures :all
 
   def setup
     Setting.notified_events = ['message_posted']
@@ -43,22 +43,27 @@ class MessageTest < ActiveSupport::TestCase
     messages_count = @board.messages_count
     @message = Message.find(1)
     replies_count = @message.replies_count
+    journals_count = @message.journals.count
 
     reply_author = User.find(2)
     reply = Message.new(:board => @board, :subject => 'Test reply', :content => 'Test reply content', :parent => @message, :author => reply_author)
     assert reply.save
+
     @board.reload
     # same topics count
     assert_equal topics_count, @board[:topics_count]
     # messages count incremented
     assert_equal messages_count+1, @board[:messages_count]
     assert_equal reply, @board.last_message
+
     @message.reload
     # replies count incremented
     assert_equal replies_count+1, @message[:replies_count]
     assert_equal reply, @message.last_reply
     # author should be watching the message
     assert @message.watched_by?(reply_author)
+    # journal count should be unchanged
+    assert_equal journals_count, @message.journals.count
   end
 
   def test_moving_message_should_update_counters
@@ -142,10 +147,9 @@ class MessageTest < ActiveSupport::TestCase
   end
 
   test "email notifications for creating a message" do
-    assert_difference("ActionMailer::Base.deliveries.count") do
+    assert_difference("ActionMailer::Base.deliveries.count", 3) do
       message = Message.new(:board => @board, :subject => 'Test message', :content => 'Test message content', :author => @user)
       assert message.save
     end
-
   end
 end

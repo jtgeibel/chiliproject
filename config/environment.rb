@@ -52,13 +52,16 @@ Rails::Initializer.run do |config|
   # (by default production uses :info, the others :debug)
   # config.log_level = :debug
 
+  # Liquid drops
+  config.autoload_paths += %W( #{RAILS_ROOT}/app/drops )
+
   # Enable page/fragment caching by setting a file-based store
   # (remember to create the caching directory and make it readable to the application)
   # config.action_controller.cache_store = :file_store, "#{RAILS_ROOT}/tmp/cache"
 
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
-  config.active_record.observers = :journal_observer, :message_observer, :issue_observer, :news_observer, :document_observer, :wiki_content_observer, :comment_observer
+  config.active_record.observers = :journal_observer, :message_observer, :issue_observer, :news_observer, :document_observer, :comment_observer
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc

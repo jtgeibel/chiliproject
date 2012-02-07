@@ -16,8 +16,28 @@ class JournalObserver < ActiveRecord::Observer
   attr_accessor :send_notification
 
   def after_create(journal)
-    if journal.type == "IssueJournal" and !journal.initial? and send_notification
-      after_create_issue_journal(journal)
+    case journal.type
+    when "IssueJournal"
+      if !journal.initial? && send_notification
+        after_create_issue_journal(journal)
+      end
+    when "WikiContentJournal"
+      wiki_content = journal.journaled
+      wiki_page = wiki_content.page
+
+      if journal.initial?
+        if Setting.notified_events.include?('wiki_content_added')
+          (wiki_content.recipients + wiki_page.wiki.watcher_recipients).uniq.each do |recipient|
+            Mailer.deliver_wiki_content_added(wiki_content, recipient)
+          end
+        end
+      else
+        if Setting.notified_events.include?('wiki_content_updated')
+          (wiki_content.recipients + wiki_page.wiki.watcher_recipients + wiki_page.watcher_recipients).uniq.each do |recipient|
+            Mailer.deliver_wiki_content_updated(wiki_content, recipient)
+          end
+        end
+      end
     end
     clear_notification
   end
@@ -27,7 +47,10 @@ class JournalObserver < ActiveRecord::Observer
         (Setting.notified_events.include?('issue_note_added') && journal.notes.present?) ||
         (Setting.notified_events.include?('issue_status_updated') && journal.new_status.present?) ||
         (Setting.notified_events.include?('issue_priority_updated') && journal.new_value_for('priority_id').present?)
-      Mailer.deliver_issue_edit(journal)
+      issue = journal.issue
+      (issue.recipients + issue.watcher_recipients).uniq.each do |recipient|
+        Mailer.deliver_issue_edit(journal, recipient)
+      end
     end
   end
 
