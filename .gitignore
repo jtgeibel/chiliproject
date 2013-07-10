@@ -26,9 +26,10 @@
 *.rbc
 doc/app
 /.bundle
-/Gemfile.lock
-/Gemfile.local
 /.rvmrc*
 /*.iml
 /.idea
 .rbx
+/vendor/bundle
+/vendor/grack
+/config/newrelic.yml
