@@ -3,7 +3,7 @@ source "https://rubygems.org"
 
 gem "rails", "2.3.18"
 
-gem "json", "~> 1.7.7"
+gem "json", "~> 1.8.0"
 gem "coderay", "~> 1.0.0"
 gem "i18n", "~> 0.4.2"
 gem "rubytree", "~> 0.5.2", :require => 'tree'
