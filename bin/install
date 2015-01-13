@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+set -e
+
+cat > config/database.yml <<\EOF
+production:
+  adapter: postgis
+  database: "{{DB_NAME}}"
+  host: "{{DB_HOST}}"
+  username: "{{DB_USER}}"
+  password: "{{DB_PASS}}"
+  encoding: unicode
+  pool: 5
+EOF
+
+bundle install --binstubs --without development test mysql2 mysql ldap openid sqlite
+
+# TODO: Handle db schema updates somehow; working with existing datasets
