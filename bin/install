@@ -1,9 +1,10 @@
 #!/usr/bin/env sh
 set -e
 
+# TODO: The {{}} syntax doesn't work in rails 2.3
 cat > config/database.yml <<\EOF
 production:
-  adapter: postgis
+  adapter: postgresql
   database: "{{DB_NAME}}"
   host: "{{DB_HOST}}"
   username: "{{DB_USER}}"
@@ -13,5 +14,7 @@ production:
 EOF
 
 bundle install --binstubs --without development test mysql2 mysql ldap openid sqlite
+
+chown -R nobody:nogroup /app
 
 # TODO: Handle db schema updates somehow; working with existing datasets

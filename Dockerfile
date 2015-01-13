@@ -10,13 +10,12 @@ RUN apt-get update && apt-get upgrade -y
 
 ADD . /app/chiliproject
 
-RUN chown -R nobody:nogroup /app
 
-USER nobody
 WORKDIR /app/chiliproject
 
 RUN bin/install
 
+USER nobody
 ENV RAILS_ENV=production
 
 EXPOSE 80
